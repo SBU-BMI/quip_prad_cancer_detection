@@ -49,11 +49,10 @@ Create folder named "data" and subfoders below on the host machine:
 ## Step 2:
 - Run the docker container as follows: 
 
-nvidia-docker run --name cancer_prediction_pipeline -itd -v <path-to-data>:/data -e HEATMAP_VERSION="<heatmap version>" -e CUDA_VISIBLE_DEVICES='<cuda device id>' -e CANCER_TYPE="breast" cancer_prediction svs_2_heatmap.sh 
+nvidia-docker run --name cancer_prediction_pipeline -itd -v <path-to-data>:/data -e CUDA_VISIBLE_DEVICES='<cuda device id>' cancer_prediction svs_2_heatmap.sh 
 
-HEATMAP_VERSION -- used to set the analysis execution id of the run (for uploading to the database)
 CUDA_VISIBLE_DEVICES -- set to select the GPU to use 
 
 The following example runs the cancer detection pipeline. It will process images in /home/user/data/svs and output the results to /home/user/data. 
 
-nvidia-docker run --name cancer_prediction_pipeline -itd -v /home/user/data:/data -e CUDA_VISIBLE_DEVICES='0' -e CANCER_TYPE="breast" cancer_prediction svs_2_heatmap.sh
+nvidia-docker run --name cancer_prediction_pipeline -itd -v /home/user/data:/data -e CUDA_VISIBLE_DEVICES='0' cancer_prediction svs_2_heatmap.sh
