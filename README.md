@@ -2,6 +2,8 @@
 
 This software implements the pipeline for the Pancrease cancer detection project. 
 
+Instructions to run the prediction are the same as to run the [BRCA pipeline](https://github.com/SBU-BMI/quip_cancer_segmentation)
+
 # Dependencies
 
  - [Pytorch 0.4.0](http://pytorch.org/)
