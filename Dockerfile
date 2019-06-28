@@ -10,16 +10,12 @@ RUN		apt-get -y update && \
 		pip install openslide-python && \
 		conda install --yes -c conda-forge opencv
 
-COPY	. /root/quip_cancer_segmentation/.
+COPY	. /root/quip_prad_cancer_detection/.
 
-RUN		cd /root/quip_cancer_segmentation/data/models_cnn && \
-		wget -v -O models.zip -L \
-			https://stonybrookmedicine.box.com/shared/static/1hdfb06lgd08xfbpoly9tjp6c6i665nz.zip >/dev/null 2>&1 && \
-        unzip -o models.zip && rm -f models.zip && mv brca_models_cnn/* . && rm -rf brca_models_cnn && \
-		chmod 0755 /root/quip_cancer_segmentation/scripts/*
+RUN		chmod 0755 /root/quip_cancer_segmentation/scripts/*
 
-ENV	BASE_DIR="/root/quip_cancer_segmentation"
+ENV	BASE_DIR="/root/quip_prad_cancer_detection"
 ENV	PATH="./":$PATH
-WORKDIR	/root/quip_cancer_segmentation/scripts
+WORKDIR	/root/quip_prad_cancer_detection/scripts
 
 CMD ["/bin/bash"]
