@@ -3,8 +3,10 @@ import os
 import numpy as np
 import time
 from PIL import Image
+from PIL import ImageFile
+ImageFile.LOAD_TRUNCATED_IMAGES = True
 
-APS = 350;
+APS = 175;
 TileFolder = sys.argv[1] + '/';
 heat_map_out = sys.argv[2];
 

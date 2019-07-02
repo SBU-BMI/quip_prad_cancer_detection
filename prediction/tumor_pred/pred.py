@@ -12,30 +12,23 @@ from torch.optim import lr_scheduler
 import copy
 import torch.nn.parallel
 import torch.optim as optim
-#import data_aug as DA
 from sklearn.metrics import mean_squared_error, accuracy_score, hamming_loss, roc_curve, auc, f1_score
 import sys
 import torch.backends.cudnn as cudnn
 import time
-import torch.nn.functional as F
-
-from model_paad import PreActResNet34
-
 from PIL import ImageFile
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 
 
-APS = 350;
+APS = 175;
 PS = 224
 TileFolder = sys.argv[1] + '/';
 
+mu = [0.6462,  0.5070,  0.8055]      # for Prostate cancer
+sigma = [0.1381,  0.1674,  0.1358]
+
 BatchSize = 96;
-
 heat_map_out = sys.argv[3];
-
-mu = [0.7238, 0.5716, 0.6779]
-sigma = [0.1120, 0.1459, 0.1089]
-
 
 device = torch.device("cuda")
 data_aug = transforms.Compose([
@@ -163,12 +156,9 @@ def val_fn_epoch_on_disk(classn, val_fn):
             with torch.no_grad():
                 inputs = Variable(inputs.to(device))
                 output = val_fn(inputs)
-
-            output = F.sigmoid(output)
             output = output.data.cpu().numpy()
-            print('size of output: ', output.shape)
-
-            # output = softmax_np(output)[:, 1]
+            output = softmax_np(output)
+            output = output[:,0] + output[:,1]  # sum of probabilies of the 1st 2 classes Grade3 and Grade4-5
             all_or[n1:n1+len(output)] = output.reshape(-1,1)
             n1 += len(output)
             all_inds[n2:n2+len(inds)] = inds;
@@ -193,32 +183,36 @@ def auc_roc(Pr, Tr):
     fpr, tpr, _ = roc_curve(Tr, Pr, pos_label=1.0);
     return auc(fpr, tpr);
 
+def parallelize_model(model):
+    if torch.cuda.is_available():
+        model = model.to(device)
+        model = torch.nn.DataParallel(model, device_ids=[0,1])
+        cudnn.benchmark = True
+        return model
+def unparallelize_model(model):
+    try:
+        while 1:
+            # to avoid nested dataparallel problem
+            model = model.module
+    except AttributeError:
+        pass
+    return model
 
 # load model
 print('start predicting...')
 start = time.time()
 
-old_model = '/data04/shared/hanle/paad_prediction/data/models_cnn/paad_lrs_preact-res34_2pos_5negs_60wsi_exclude_valSlides_hard_epoch_91_acc_78.94117647058823'
-
-old_model = '/data04/shared/hanle/paad_prediction/data/models_cnn/paad_baseline_preact-res34_60wsi_exclude_valSlides_2pos_5neg_hard_epoch_149_acc_71.17647058823529'
-
-#old_model = '/data04/shared/hanle/paad_prediction/data/models_cnn/paad_lrs_preact-res34_2pos_5negs_60wsi_exclude_valSlides_hard_epoch_149_acc_77.32352941176471'
-
-old_model = '/data04/shared/hanle/paad_prediction/data/models_cnn/paad_baseline_preact-res34_60wsi_exclude_valSlides_2pos_5neg_hard_epoch_100_acc_71.44117647058823'
-
-#old_model = '/data04/shared/hanle/paad_prediction/data/models_cnn/paad_baseline_preact-res34_60wsi_exclude_valSlides_balanced_hard_epoch_149_acc_70.76470588235294'
-
-old_model = '/data04/shared/hanle/paad_prediction/data/models_cnn/paad_baseline_preact-res34_train_TCGA_ensemble_epoch_7_auc_0.8595125864960883'
+old_model = '../../data/models_cnn/RESNET_34_prostate_trueVal_hard_train__0530_0015_0.954882634484846_1919.t7'
 
 print("| Load pretrained at  %s..." % old_model)
-
-checkpoint = torch.load(old_model)
-model = PreActResNet34(1)
-model.load_state_dict(checkpoint['net'])
+checkpoint = torch.load(old_model, map_location=lambda storage, loc: storage)
+model = checkpoint['model']
+model = unparallelize_model(model)
 model.to(device)
-model.eval()
-best_auc = checkpoint['acc']
-print('previous best AUC: {:.4f} at epoch: {}'.format(best_auc, checkpoint['epoch']))
+model = parallelize_model(model)
+model.train(False)
+best_auc = checkpoint['f1-score']
+print('previous best F1-score: \t%.4f'% best_auc)
 print('=============================================')
 
 

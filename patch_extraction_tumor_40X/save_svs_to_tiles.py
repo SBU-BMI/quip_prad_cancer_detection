@@ -5,19 +5,16 @@ import os
 from PIL import Image
 import datetime
 import time
-#from stain_norm_python.color_normalize_single_folder import color_normalize_single_folder
-import sys
 import cv2
+from shutil import copyfile as cp
 import multiprocessing as mp
-
 
 slide_name = sys.argv[2] + '/' + sys.argv[1];
 output_folder = sys.argv[3] + '/' + sys.argv[1];
-patch_size_5X = 1050;
-level = 1
+patch_size_20X = 1400;
+level = 0
 
 start = time.time()
-
 fdone = '{}/extraction_done.txt'.format(output_folder);
 if os.path.isfile(fdone):
     print('fdone {} exist, skipping'.format(fdone));
@@ -30,28 +27,27 @@ if not os.path.exists(output_folder):
 
 try:
     oslide = openslide.OpenSlide(slide_name);
-    if openslide.PROPERTY_NAME_MPP_X in oslide.properties:
+    if openslide.PROPERTY_NAME_MPP_X in oslide.properties:     # 'openslide.mpp-x'
         mag = 10.0 / float(oslide.properties[openslide.PROPERTY_NAME_MPP_X]);
     elif "XResolution" in oslide.properties:
         mag = 10.0 / float(oslide.properties["XResolution"]);
     elif 'tiff.XResolution' in oslide.properties:   # for Multiplex IHC WSIs, .tiff images
         mag = 10.0 / float(oslide.properties["tiff.XResolution"]);
     else:
+        print('[WARNING] mpp value not found. Assuming it is 40X with mpp=0.254!', slide_name);
         mag = 10.0 / float(0.254);
-    print('mag: ', mag)
-    pw = int(patch_size_5X * mag / 6.6666667);
+    pw = int(patch_size_20X * mag / 20);  # scale patch size from 20X to 'mag'
+
     width = oslide.dimensions[0];
     height = oslide.dimensions[1];
-    scale_down = oslide.level_downsamples[level]
 except:
     print('{}: exception caught'.format(slide_name));
     exit(1);
 
-print('slide/width/height/scale_down/pw: ', slide_name, width, height, scale_down, pw)
-sys.stdout.flush()
+print('height/width: {}/{}'.format(height, width))
+
 
 corrs = []
-
 for x in range(1, width, pw):
     for y in range(1, height, pw):
         if x + pw > width:
@@ -68,12 +64,16 @@ for x in range(1, width, pw):
 
 def extract_patch(corr):
     x, y, pw_x, pw_y = corr
+    fname = '{}/{}_{}_{}_{}.png'.format(output_folder, x, y, pw, patch_size_20X);
 
-    patch = oslide.read_region((x, y), level, (int(pw_x/scale_down), int(pw_y/scale_down)));
-    patch = patch.resize((int(patch_size_5X * pw_x / pw), int(patch_size_5X * pw_y / pw)), Image.ANTIALIAS);
-    fname = '{}/{}_{}_{}_{}.png'.format(output_folder, x, y, pw, patch_size_5X);
+    patch = oslide.read_region((x, y), 0, (pw_x, pw_y));
+     #shahira: skip where the alpha channel is zero
+    patch_arr = np.array(patch);
+    if(patch_arr[:,:,3].max() == 0):
+        return
+
+    patch = patch.resize((int(patch_size_20X * pw_x / pw), int(patch_size_20X * pw_y / pw)), Image.ANTIALIAS);
     patch.save(fname);
-
 
 print(slide_name, len(corrs))
 pool = mp.Pool(processes=4)
