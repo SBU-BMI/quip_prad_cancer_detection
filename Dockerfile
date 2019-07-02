@@ -12,7 +12,7 @@ RUN		apt-get -y update && \
 
 COPY	. /root/quip_prad_cancer_detection/.
 
-RUN		chmod 0755 /root/quip_cancer_segmentation/scripts/*
+RUN		chmod 0755 /root/quip_prad_cancer_detection/scripts/*
 
 ENV	BASE_DIR="/root/quip_prad_cancer_detection"
 ENV	PATH="./":$PATH
