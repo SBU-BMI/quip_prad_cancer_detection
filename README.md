@@ -1,6 +1,6 @@
 # Prad cancer detection pipeline
 
-This software implements the pipeline for the Pancrease cancer detection project. 
+This software implements the pipeline for the Prostate cancer detection project. 
 
 # Dependencies
 
