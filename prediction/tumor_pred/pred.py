@@ -158,14 +158,9 @@ def val_fn_epoch_on_disk(classn, val_fn):
                 output = val_fn(inputs)
             output = output.data.cpu().numpy()
             output = softmax_np(output)
-            output = output[:,0] + output[:,1]  # sum of probabilies of the 1st 2 classes Grade3 and Grade4-5
-            '''
-            0 - Gleason 3
-            1 - Gleason 4 + 5
-            2 - Benign
-            3 - Stroma
-            '''
-            all_or[n1:n1+len(output)] = output.reshape(-1,1)
+            # output = output[:,0] + output[:,1]  # sum of probabilies of the 1st 2 classes Grade3 and Grade4-5
+            # all_or[n1:n1+len(output)] = output.reshape(-1,1)
+            all_or[n1:n1+len(output)] = output
             n1 += len(output)
             all_inds[n2:n2+len(inds)] = inds;
             n2 += len(inds);
@@ -221,20 +216,24 @@ best_auc = checkpoint['f1-score']
 print('previous best F1-score: \t%.4f'% best_auc)
 print('=============================================')
 
-
-Or, inds, coor = val_fn_epoch_on_disk(1, model);
-Or_all = np.zeros(shape=(coor.shape[0],), dtype=np.float32);
-Or_all[inds] = Or[:, 0];
+classn = 4
+Or, inds, coor = val_fn_epoch_on_disk(classn, model);    # 4 classes: grade3, grade4-5, benign, stroma
+Or_all = np.zeros(shape=(coor.shape[0], classn), dtype=np.float32);
+Or_all[inds] = Or
 
 print('len of all coor: ', coor.shape)
 print('shape of Or: ', Or.shape)
 print('shape of inds: ', inds.shape)
 
 fid = open(TileFolder + '/' + heat_map_out, 'w');
+fid_grades = open(TileFolder + '/' + heat_map_out[:-4] + '_grades.txt', 'w');
 for idx in range(0, Or_all.shape[0]):
-    fid.write('{} {} {}\n'.format(coor[idx][0], coor[idx][1], Or_all[idx]))
+    fid.write('{} {} {}\n'.format(coor[idx][0], coor[idx][1], Or_all[idx][0] + Or_all[idx][1]))
+    fid_grades.write('{} {} {} {} {} {}\n'.format(coor[idx][0], coor[idx][1], Or_all[idx][0], Or_all[idx][1], Or_all[idx][2], Or_all[idx][3]))
 
 fid.close();
+fid_grades.close()
+
 
 print('Elapsed Time: ', (time.time() - start)/60.0)
 print('DONE!');
