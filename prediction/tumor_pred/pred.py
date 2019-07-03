@@ -159,6 +159,12 @@ def val_fn_epoch_on_disk(classn, val_fn):
             output = output.data.cpu().numpy()
             output = softmax_np(output)
             output = output[:,0] + output[:,1]  # sum of probabilies of the 1st 2 classes Grade3 and Grade4-5
+            '''
+            0 - Gleason 3
+            1 - Gleason 4 + 5
+            2 - Benign
+            3 - Stroma
+            '''
             all_or[n1:n1+len(output)] = output.reshape(-1,1)
             n1 += len(output)
             all_inds[n2:n2+len(inds)] = inds;
