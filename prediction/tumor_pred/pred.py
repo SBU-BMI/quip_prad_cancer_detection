@@ -210,7 +210,7 @@ checkpoint = torch.load(old_model, map_location=lambda storage, loc: storage)
 model = checkpoint['model']
 model = unparallelize_model(model)
 model.to(device)
-model = parallelize_model(model)
+#model = parallelize_model(model)
 model.train(False)
 best_auc = checkpoint['f1-score']
 print('previous best F1-score: \t%.4f'% best_auc)
