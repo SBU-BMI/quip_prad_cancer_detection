@@ -28,7 +28,7 @@ for files in ${FOLDER}/*/${PRED_VERSION}; do
 done
 
 
-PRED_VERSION=patch-level-color-cancer.txt
+PRED_VERSION=patch-level-color.txt
 DIS_FOLDER=./patch-level-color/
 for files in ${FOLDER}/*/${PRED_VERSION}; do
     dis=`echo ${files} | awk -F'/' '{print "color-"substr($(NF-1),1,length($(NF-1))-4);}'`
