@@ -7,7 +7,7 @@ CANCER_TYPE=quip
 MONGODB_HOST=xxxx
 MONGODB_PORT=27017
 
-HEATMAP_VERSION=cancer-prad
+HEATMAP_VERSION=cancer-prad-new
 
 # Base directory
 BASE_DIR=/root/quip_prad_cancer_detection

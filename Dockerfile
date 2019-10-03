@@ -24,8 +24,8 @@ COPY	. /root/quip_prad_cancer_detection/.
 
 WORKDIR /root/quip_prad_cancer_detection/models_cnn
 RUN	wget -v -O \
-	RESNET_34_prostate_trueVal_hard_train__0530_0015_0.954882634484846_1919.t7 \
-	-L https://stonybrookmedicine.box.com/shared/static/nv9xs53n9pus5kz9pzv21z97vrwvz4ek.t7 
+	RESNET_34_prostate_trueVal___0814_0223_0.9757632122750297_97_beatrice_SEER.t7 \
+	-L https://stonybrookmedicine.box.com/shared/static/5krmy6ha3t1syoltcr7xeypxv4n4ow6d.t7
 
 WORKDIR /root/quip_prad_cancer_detection/scripts
 RUN	chmod 0755 *
