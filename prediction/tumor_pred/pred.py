@@ -157,10 +157,9 @@ def val_fn_epoch_on_disk(classn, val_fn):
                 inputs = Variable(inputs.to(device))
                 output = val_fn(inputs)
             output = output.data.cpu().numpy()
-            output = softmax_np(output)
-            # output = output[:,0] + output[:,1]  # sum of probabilies of the 1st 2 classes Grade3 and Grade4-5
-            # all_or[n1:n1+len(output)] = output.reshape(-1,1)
-            all_or[n1:n1+len(output)] = output
+            output = softmax_np(output)[:, 1]
+            all_or[n1:n1+len(output)] = output.reshape(-1,1)
+            #all_or[n1:n1+len(output)] = output
             n1 += len(output)
             all_inds[n2:n2+len(inds)] = inds;
             n2 += len(inds);
@@ -203,8 +202,9 @@ def unparallelize_model(model):
 print('start predicting...')
 start = time.time()
 
+#old_model = '../../data/models_cnn/RESNET_34_prostate_trueVal_hard_train__0530_0015_0.954882634484846_1919.t7'
 old_model = '../../models_cnn/RESNET_34_prostate_trueVal___0814_0223_0.9757632122750297_97_beatrice_SEER.t7'
-# old_model = '../../models_cnn/RESNET_34_prostate_trueVal_hard_train__0530_0015_0.954882634484846_1919.t7'
+
 
 print("| Load pretrained at  %s..." % old_model)
 checkpoint = torch.load(old_model, map_location=lambda storage, loc: storage)
@@ -217,23 +217,21 @@ best_auc = checkpoint['f1-score']
 print('previous best F1-score: \t%.4f'% best_auc)
 print('=============================================')
 
-classn = 4
-Or, inds, coor = val_fn_epoch_on_disk(classn, model);    # 4 classes: grade3, grade4-5, benign, stroma
-Or_all = np.zeros(shape=(coor.shape[0], classn), dtype=np.float32);
-Or_all[inds] = Or
+classn =1
+Or, inds, coor = val_fn_epoch_on_disk(classn, model);    # 2 classes: tumor, non-tumor
+Or_all = np.zeros(shape=(coor.shape[0], ), dtype=np.float32);
+#Or_all[inds] = Or
+Or_all[inds] = Or[:, 0]
 
 print('len of all coor: ', coor.shape)
 print('shape of Or: ', Or.shape)
 print('shape of inds: ', inds.shape)
 
 fid = open(TileFolder + '/' + heat_map_out, 'w');
-fid_grades = open(TileFolder + '/' + heat_map_out[:-4] + '_grades.txt', 'w');
 for idx in range(0, Or_all.shape[0]):
-    fid.write('{} {} {}\n'.format(coor[idx][0], coor[idx][1], Or_all[idx][0] + Or_all[idx][1]))
-    fid_grades.write('{} {} {} {} {} {}\n'.format(coor[idx][0], coor[idx][1], Or_all[idx][0], Or_all[idx][1], Or_all[idx][2], Or_all[idx][3]))
+    fid.write('{} {} {}\n'.format(coor[idx][0], coor[idx][1], Or_all[idx]))
 
 fid.close();
-fid_grades.close()
 
 
 print('Elapsed Time: ', (time.time() - start)/60.0)
