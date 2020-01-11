@@ -8,6 +8,7 @@ import time
 import cv2
 from shutil import copyfile as cp
 import multiprocessing as mp
+import random
 
 slide_name = sys.argv[2] + '/' + sys.argv[1];
 output_folder = sys.argv[3] + '/' + sys.argv[1];
@@ -15,6 +16,8 @@ patch_size_20X = 1400;
 level = 0
 
 start = time.time()
+time.sleep(random.randint(100, 1000)/100.0)  # wait for 1 --> 10s to avoid concurrency
+
 fdone = '{}/extraction_done.txt'.format(output_folder);
 if os.path.isfile(fdone):
     print('fdone {} exist, skipping'.format(fdone));
