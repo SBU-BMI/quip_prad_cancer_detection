@@ -15,8 +15,8 @@ output_folder = sys.argv[3] + '/' + sys.argv[1];
 patch_size_20X = 1400;
 level = 0
 
-start = time.time()
-time.sleep(random.randint(100, 1000)/100.0)  # wait for 1 --> 10s to avoid concurrency
+#start = time.time()
+#time.sleep(random.randint(100, 1000)/100.0)  # wait for 1 --> 10s to avoid concurrency
 
 fdone = '{}/extraction_done.txt'.format(output_folder);
 if os.path.isfile(fdone):
