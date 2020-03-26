@@ -1,35 +1,20 @@
 #!/bin/bash
 
+source ../conf/variables.sh
+
 FOLDER=${1}     #/data/patches
 
 PRED_VERSION=patch-level-prad.txt
-PRED_GRADES=patch-level-prad_grades.txt
 
-DIS_FOLDER=./patch-level-lym/
-DIS_FOLDER_GRADES=./patch-level-grades/
+DIS_FOLDER=${HEATMAP_TXT_OUTPUT_FOLDER}
 for files in ${FOLDER}/*/${PRED_VERSION}; do
     dis=`echo ${files} | awk -F'/' '{print "prediction-"substr($(NF-1),1,length($(NF-1))-4);}'`
     cp ${files} ${DIS_FOLDER}/${dis}
+    echo -e "x_loc y_loc grade3 grade4+5 benign\n$(cat ${DIS_FOLDER}/${dis})" > ${DIS_FOLDER}/${dis}
 done
-
-for files in ${FOLDER}/*/${PRED_GRADES}; do
-    dis=`echo ${files} | awk -F'/' '{print "prediction_GRADES-"substr($(NF-1),1,length($(NF-1))-4);}'`
-    cp ${files} ${DIS_FOLDER_GRADES}/${dis}
-done
-
-
-
-PRED_VERSION=patch-level-necrosis.txt
-DIS_FOLDER=./patch-level-nec/
-for files in ${FOLDER}/*/${PRED_VERSION}; do
-    dis=`echo ${files} | awk -F'/' '{print "prediction-"substr($(NF-1),1,length($(NF-1))-4);}'`
-    cp ${files} ${DIS_FOLDER}/${dis}
-    #python -u reverse_nec_pred.py ${DIS_FOLDER}/${dis} ${DIS_FOLDER}/${dis}
-done
-
 
 PRED_VERSION=patch-level-color.txt
-DIS_FOLDER=./patch-level-color/
+DIS_FOLDER=${HEATMAP_TXT_OUTPUT_FOLDER}
 for files in ${FOLDER}/*/${PRED_VERSION}; do
     dis=`echo ${files} | awk -F'/' '{print "color-"substr($(NF-1),1,length($(NF-1))-4);}'`
     cp ${files} ${DIS_FOLDER}/${dis}

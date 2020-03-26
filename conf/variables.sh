@@ -6,10 +6,10 @@ DEFAULT_MPP=0.5
 CANCER_TYPE=quip
 MONGODB_HOST=quip4.bmi.stonybrook.edu
 MONGODB_PORT=27017
-HEATMAP_VERSION=cancer-prad
+HEATMAP_VERSION=cancer-prad-beatrice-john-3classes_2020-01-16_han.le@stonybrook.edu
 
 # Base directory
-BASE_DIR=/data10/shared/hanle/quip_prad_cancer_detection
+BASE_DIR=/data04/shared/hanle/prad_cancer_detection_SEER
 
 # The username you want to download heatmaps from
 #USERNAME=olcabasturk@gmail.com
@@ -46,7 +46,6 @@ LYM_NECRO_CNN_MODEL_PATH=${BASE_DIR}/data/models_cnn
 NEC_CNN_TRAINING_DATA=${BASE_DIR}/data/training_data_cnn
 NEC_CNN_TRAINING_DEVICE=gpu1
 NEC_CNN_PRED_DEVICE=gpu0
-EXTERNAL_LYM_MODEL=0
 
 if [[ -z "${CUDA_VISIBLE_DEVICES}" ]]; then
 	LYM_CNN_TRAINING_DEVICE=0
@@ -55,4 +54,3 @@ else
 	LYM_CNN_TRAINING_DEVICE=${CUDA_VISIBLE_DEVICES}
 	LYM_CNN_PRED_DEVICE=${CUDA_VISIBLE_DEVICES}
 fi
-

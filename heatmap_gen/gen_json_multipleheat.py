@@ -1,3 +1,6 @@
+# Usage:
+#   python gen_json_multipleheat.py ./prediction-TCGA-xxxx lym_v1 lymphocyte_4 lym 0.5 necrosis 0.5
+
 import subprocess
 import numpy as np
 import math
@@ -8,9 +11,10 @@ import random
 import os
 import openslide
 from bson import json_util
-from pymongo import MongoClient
+#from pymongo import MongoClient
 
 is_shifted = False;
+isHeader = True        # to skip the first line in the prediction-xxx files
 
 n_argv = len(sys.argv);
 pred_file_path = sys.argv[1];
@@ -18,37 +22,7 @@ pred_folder, pred_file_name = os.path.split(pred_file_path);
 filename = pred_file_name;
 heatmap_name = sys.argv[2];
 svs_img_folder=sys.argv[3];
-start_id_multiheat = 4;
-
-def derive_info_from_pred_file(pred_file_path):
-    eps = 10.0
-    d = np.loadtxt(pred_file_path)
-    x_sort = np.sort(np.unique(d[:, 0]))
-    y_sort = np.sort(np.unique(d[:, 1]))
-    x_len = len(x_sort)
-    y_len = len(y_sort)
-    for i in range(1, len(x_sort)):
-        if x_sort[i] - x_sort[i-1] < eps:
-            x_len -= 1
-    for i in range(1, len(y_sort)):
-        if y_sort[i] - y_sort[i-1] < eps:
-            y_len -= 1
-
-    avg_patch_width = (x_sort[-1] + x_sort[0]) / x_len
-    avg_patch_height = (y_sort[-1] + y_sort[0]) / y_len
-
-    pred_x_min = 0
-    pred_x_max = x_sort[-1] + avg_patch_width / 2.0
-    pred_y_min = 0
-    pred_y_max = y_sort[-1] + avg_patch_height / 2.0
-
-    derived_mpp = 50.0 / avg_patch_width
-
-    return derived_mpp, avg_patch_width, avg_patch_height, \
-            pred_x_min, pred_x_max, pred_y_min, pred_y_max
-
-derived_mpp, avg_patch_width, avg_patch_height, pred_x_min, pred_x_max, pred_y_min, pred_y_max = \
-        derive_info_from_pred_file(pred_file_path);
+start_id_multiheat = 4; # additional input starts from 4th
 
 # Load configs from ../conf/variables.sh
 mongo_host = 'localhost';
@@ -73,12 +47,7 @@ for config_line in lines:
         slide_type = cancer_type;
         print("Cancer type ", cancer_type);
 
-    if (config_line.startswith('EXTERNAL_LYM_MODEL=')):
-        parts = config_line.split('=');
-        external_lym_model = parts[1];
-        print("If uses external model ", external_lym_model);
-
-n_heat = int((n_argv - start_id_multiheat) / 2);
+n_heat = (n_argv - start_id_multiheat) // 2;
 heat_list = [];
 weight_list = [];
 for h_id, h_name in enumerate(sys.argv[start_id_multiheat::2]):
@@ -94,7 +63,7 @@ imgfilename = svs_img_folder + '/' + casename + '.svs';
 if not os.path.isfile(imgfilename):
     imgfilename = svs_img_folder + '/' + casename + '.tif';
 if not os.path.isfile(imgfilename):
-    print("{}/svs does not exist".format(imgfilename));
+    print("{}.svs/tif does not exist".format(svs_img_folder + '/' + casename));
     print("Quit");
     sys.exit(0);
 print("Doing {}".format(imgfilename));
@@ -109,8 +78,8 @@ print("Doing {}".format(imgfilename));
 #db_result = db.find_one({"filename":query_filename});
 #caseid = db_result['case_id'];
 #subjectid = db_result['subject_id'];
-caseid = casename.split('.')[0]
-subjectid = '-'.join(caseid.split('-')[0:3])
+caseid = casename;
+subjectid = casename[:-2];
 
 
 heatmapfile = './json/heatmap_' + filename.split('prediction-')[1] + '.json';
@@ -131,6 +100,10 @@ score_set_arr = np.zeros(shape=(10000000, n_heat), dtype=np.float64);
 idx = 0;
 with open(pred_file_path) as infile:
     for line in infile:
+        if isHeader:
+            isHeader = False
+            continue
+
         parts = line.split(' ');
         x = int(parts[0]);
         y = int(parts[1]);
@@ -165,8 +138,7 @@ dict_img['case_id'] = caseid;
 dict_img['subject_id'] = subjectid;
 
 dict_analysis = {};
-dict_analysis['cancer_type'] = slide_type;
-dict_analysis['study_id'] = 'u24_tcga';
+dict_analysis['study_id'] = slide_type;
 dict_analysis['execution_id'] = heatmap_name;
 dict_analysis['source'] = 'computer';
 dict_analysis['computation'] = 'heatmap';
@@ -233,25 +205,12 @@ with open(metafile, 'w') as mf:
 
     dict_meta_provenance = {};
     dict_meta_provenance['analysis_execution_id'] = heatmap_name;
-    dict_meta_provenance['cancer_type'] = slide_type;
-    dict_meta_provenance['study_id'] = 'u24_tcga';
+    dict_meta_provenance['study_id'] = slide_type;
     dict_meta_provenance['type'] = 'computer';
-    dict_meta_provenance['external_lym_model'] = external_lym_model;
     dict_meta['provenance'] = dict_meta_provenance;
 
     dict_meta['submit_date'] = datetime.datetime.now();
     dict_meta['randval'] = random.uniform(0,1);
 
-    dict_meta_output_dims = {};
-    dict_meta_output_dims['derived_mpp'] = derived_mpp;
-    dict_meta_output_dims['slide_width'] = slide_width;
-    dict_meta_output_dims['slide_height'] = slide_height;
-    dict_meta_output_dims['avg_patch_width'] = avg_patch_width;
-    dict_meta_output_dims['avg_patch_height'] = avg_patch_height;
-    dict_meta_output_dims['pred_x_min'] = pred_x_min;
-    dict_meta_output_dims['pred_x_max'] = pred_x_max;
-    dict_meta_output_dims['pred_y_min'] = pred_y_min;
-    dict_meta_output_dims['pred_y_max'] = pred_y_max;
-    dict_meta['output_dims'] = dict_meta_output_dims;
-
     json.dump(dict_meta, mf, default=json_util.default);
+
