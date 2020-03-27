@@ -81,7 +81,7 @@ print("Doing {}".format(imgfilename));
 caseid = casename;
 subjectid = casename[:-2];
 
-json_out_fol = '../data/heatmap_jsons_6classes'
+json_out_fol = '../data/heatmap_jsons_3classes'
 if not os.path.exists(json_out_fol):
     os.mkdir(json_out_fol)
 json_out_fol = os.path.join(json_out_fol, pred_file_path.split('/')[-2].split('_')[-1])

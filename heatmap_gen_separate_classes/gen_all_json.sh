@@ -1,8 +1,6 @@
 #!/bin/bash
 
 source ../conf/variables.sh
-#HEATMAP_VERSION="lung-john-3c_lepidic_20200115_hanle"
-#HEATMAP_TXT_OUTPUT_FOLDER=${BASE_DIR}/data/heatmap_txt_3classes_separate_class/heatmap_txt_lepidic
 
 HEATMAP_VERSION=${1}
 HEATMAP_TXT_OUTPUT_FOLDER=${2}
