@@ -6,7 +6,7 @@ DEFAULT_MPP=0.5
 CANCER_TYPE=quip
 MONGODB_HOST=quip4.bmi.stonybrook.edu
 MONGODB_PORT=27017
-HEATMAP_VERSION=cancer-prad-beatrice-john-3classes_2020-01-16_han.le@stonybrook.edu
+HEATMAP_VERSION=cancer-prad-3c-032720-hanle
 
 # Base directory
 BASE_DIR=/data04/shared/hanle/prad_cancer_detection_SEER
