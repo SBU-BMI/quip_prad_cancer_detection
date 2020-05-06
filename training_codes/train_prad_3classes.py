@@ -257,7 +257,7 @@ def main():
 
     data_transforms = get_data_transforms(mean, std, args.APS)
 
-    train_seer_fol = '/data10/shared/hanle/extract_prad_seer_john/patches_prad_seer'
+    train_seer_fol = '/data10/shared/hanle/extract_prad_seer_john/patches_prad_seer_4classes'
     train_beatrice_fol = '/data10/shared/hanle/extract_prad_seer_john/beatrice_training_4classes'
     val_fol = '/data10/shared/hanle/extract_prad_seer_john/beatrice_validation_4classes'
 
