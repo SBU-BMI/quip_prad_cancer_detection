@@ -9,7 +9,8 @@ MONGODB_PORT=27017
 HEATMAP_VERSION=cancer-prad-3c-032720-hanle
 
 # Base directory
-BASE_DIR=/data04/shared/hanle/prad_cancer_detection_SEER
+# BASE_DIR=/data04/shared/hanle/prad_cancer_detection_SEER
+BASE_DIR="$(dirname "$PWD")"        # auto detect base directory
 
 # The username you want to download heatmaps from
 #USERNAME=olcabasturk@gmail.com
