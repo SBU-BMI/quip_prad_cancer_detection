@@ -27,7 +27,15 @@ This software implements the pipeline for the Prostate cancer detection project.
 
 - prediction/: CNN prediction code. 
 
-- training/: CNN training code. 
+- training_codes/: CNN training code. 
+
+
+## Training
+- Go to folder "training_codes", run python train_prad_3classes.py
+
+## WSIs prediction
+- Go to folder "scripts", run bash svs_2_heatmap.sh
+
 
 # Docker Instructions 
 
