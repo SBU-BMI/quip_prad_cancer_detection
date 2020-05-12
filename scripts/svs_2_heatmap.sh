@@ -3,11 +3,11 @@
 cd ../
 source ./conf/variables.sh
 
-cd patch_extraction_tumor_40X
+cd patch_extraction_tumor_20X
 nohup bash start.sh &
 cd ..
 
-cd prediction_3classes
+cd prediction_4classes
 nohup bash start.sh &
 cd ..
 

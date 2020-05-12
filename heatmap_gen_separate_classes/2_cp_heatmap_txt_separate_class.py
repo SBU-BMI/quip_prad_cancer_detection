@@ -9,9 +9,9 @@ def mkdir_fol(path):
         os.mkdir(path)
 
 in_fol = '../data/heatmap_txt'
-out_fol = '../data/heatmap_txt_3classes_separate_class'
+out_fol = '../data/heatmap_txt_4classes_separate_class'
 
-dest_fols = ['heatmap_txt_grade3', 'heatmap_txt_grade45', 'heatmap_txt_benign']
+dest_fols = ['heatmap_txt_benign', 'heatmap_txt_grade3', 'heatmap_txt_grade4', 'heatmap_txt_grade5']
 mkdir_fol(out_fol)
 for fol in dest_fols:
     mkdir_fol(os.path.join(out_fol, fol))

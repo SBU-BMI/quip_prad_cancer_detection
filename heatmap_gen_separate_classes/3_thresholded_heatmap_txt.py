@@ -5,8 +5,8 @@ import numpy as np
 import multiprocessing as mp
 
 in_fol = '../data/heatmap_txt'
-thresholded_fol = '../data/heatmap_txt_3classes_separate_class/heatmap_txt_thresholded'
-tumor_fol = '../data/heatmap_txt_3classes_separate_class/heatmap_txt_tumor'
+thresholded_fol = '../data/heatmap_txt_4classes_separate_class/heatmap_txt_thresholded'
+tumor_fol = '../data/heatmap_txt_4classes_separate_class/heatmap_txt_tumor'
 
 if not os.path.exists(thresholded_fol):
     os.mkdir(thresholded_fol)
@@ -14,7 +14,7 @@ if not os.path.exists(thresholded_fol):
 if not os.path.exists(tumor_fol):
     os.mkdir(tumor_fol)
 
-probs = [0.5, 0.9, 0.1] # grade3, grade45, benign
+probs = [0.1, 0.3, 0.6, 0.9] # benign, grade3, grade4, grade5
 files = glob.glob(in_fol + '/prediction*')
 
 def process(file):
@@ -28,7 +28,7 @@ def process(file):
         res = probs[np.argmax(grades)] if sum(grades) > 0 else 0
         thresholded.writelines('{} {} {} 0 \n'.format(pred[0], pred[1], res))
 
-        benign_prob = grades[2]
+        benign_prob = grades[0]
         benign_prob_adjusted = 1
         if sum(grades) > 0:
             benign_prob_adjusted = benign_prob*(len(grades) - 1) / (sum(grades) + benign_prob*(len(grades) - 2))

@@ -1,6 +1,7 @@
 # Prad cancer detection pipeline
 
-This software implements the pipeline for the 3-classes (benign, grade3, grade45) Prostate cancer detection project. 
+This software implements the pipeline for the 4-classes (benign, grade3, grade4, grade5) Prostate cancer detection project. 
+This is under development, do NOT use it in production
 
 # Dependencies
 
@@ -23,9 +24,9 @@ This software implements the pipeline for the 3-classes (benign, grade3, grade45
 
 - heatmap_gen/: generate json files that represents heatmaps for camicroscope, using the lymphocyte and necrosis CNNs' raw output txt files. 
 
-- patch_extraction_tumor_40X/: extracts all patches from svs images. Mainly used in the test phase. 
+- patch_extraction_tumor_20X/: extracts all patches from svs images. Mainly used in the test phase. 
 
-- prediction/: CNN prediction code. 
+- prediction_4classes/: CNN prediction code. 
 
 - training_codes/: CNN training code. 
 
