@@ -27,7 +27,7 @@ start_id_multiheat = 4; # additional input starts from 4th
 # Load configs from ../conf/variables.sh
 mongo_host = 'localhost';
 mongo_port = 27017;
-cancer_type = 'quip';
+cancer_type = 'prad';
 lines = [line.rstrip('\n') for line in open('../conf/variables.sh')];
 for config_line in lines:
     if (config_line.startswith('MONGODB_HOST=')):
@@ -68,25 +68,25 @@ if not os.path.isfile(imgfilename):
     sys.exit(0);
 print("Doing {}".format(imgfilename));
 
-
-# Retrieve case_id and subject_id from mongodb
-# Read mongodb port
-
-#mongo_client = MongoClient(mongo_host, mongo_port);
-#db = mongo_client[cancer_type].images;
-#query_filename = imgfilename;
-#db_result = db.find_one({"filename":query_filename});
-#caseid = db_result['case_id'];
-#subjectid = db_result['subject_id'];
 caseid = casename;
 subjectid = casename[:-2];
 
-json_out_fol = '../data/heatmap_jsons_3classes'
-if not os.path.exists(json_out_fol):
-    os.mkdir(json_out_fol)
-json_out_fol = os.path.join(json_out_fol, pred_file_path.split('/')[-2].split('_')[-1])
-if not os.path.exists(json_out_fol):
-    os.mkdir(json_out_fol)
+out_dir = os.environ.get('OUT_DIR')
+if out_dir is None:
+   out_dir = "../data" 
+
+json_out_rootfol = str(out_dir)+'/heatmap_jsons_3classes'
+json_out_fol = os.path.join(json_out_rootfol, pred_file_path.split('/')[-2].split('_')[-1])
+try:
+   if not os.path.exists(json_out_rootfol):
+       os.mkdir(json_out_rootfol)
+except:
+   print("FOLDER ",json_out_rootfol," EXISTS.")
+try:
+   if not os.path.exists(json_out_fol):
+       os.mkdir(json_out_fol)
+except:
+   print("FOLDER ",json_out_fol, " EXISTS.")
 
 heatmapfile = json_out_fol + '/heatmap_' + filename.split('prediction-')[1] + '.json';
 metafile = json_out_fol +'/meta_' + filename.split('prediction-')[1] + '.json';
@@ -94,7 +94,6 @@ metafile = json_out_fol +'/meta_' + filename.split('prediction-')[1] + '.json';
 oslide = openslide.OpenSlide(imgfilename);
 slide_width_openslide = oslide.dimensions[0];
 slide_height_openslide = oslide.dimensions[1];
-
 
 print("Loaded caseid and subjectid ", caseid, subjectid);
 
