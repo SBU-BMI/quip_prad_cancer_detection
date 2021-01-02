@@ -3,7 +3,6 @@
 source ../../conf/variables.sh
 
 FOLDER=$1
-# PARAL = [0, MAX_PARAL-1]
 PARAL=$2
 MAX_PARAL=$3
 DEVICE=$4
@@ -27,8 +26,7 @@ while [ 1 ]; do
         if [ -f ${files}/${DONE_FILE} ]; then
             if [ ! -f ${files}/${DATA_FILE} ]; then
                 echo ${files}/${DATA_FILE} generating
-                #CUDA_VISIBLE_DEVICES=1 python -u ${EXEC_FILE} ${files} ${LYM_NECRO_CNN_MODEL_PATH} ${DATA_FILE}
-                python -u ${EXEC_FILE} ${files} ${LYM_NECRO_CNN_MODEL_PATH} ${DATA_FILE}
+                python -u ${EXEC_FILE} ${files} ${LYM_NECRO_CNN_MODEL_PATH} ${DATA_FILE} ${LYM_NECRO_CNN_MODEL_PATH}/${MODEL}
             fi
         fi
     done

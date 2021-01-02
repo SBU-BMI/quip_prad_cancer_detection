@@ -29,6 +29,7 @@ sigma = [0.1381,  0.1674,  0.1358]
 
 BatchSize = 96;
 heat_map_out = sys.argv[3];
+old_model = sys.argv[4];
 
 device = torch.device("cuda")
 data_aug = transforms.Compose([
@@ -202,11 +203,6 @@ def unparallelize_model(model):
 # load model
 print('start predicting...')
 start = time.time()
-
-#old_model = '../../models_cnn/RESNET_34_prostate_trueVal_hard_train__0530_0015_0.954882634484846_1919.t7'
-#old_model = '../../models_cnn/RESNET_34_prostate_trueVal___0814_0223_0.9757632122750297_97_beatrice_SEER.t7'
-old_model = '../../models_cnn/RESNET_34_prostate_beatrice_john___1117_1038_0.9533516227597434_87.t7'
-
 
 print("| Load pretrained at  %s..." % old_model)
 checkpoint = torch.load(old_model, map_location=lambda storage, loc: storage)

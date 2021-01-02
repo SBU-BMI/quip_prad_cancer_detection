@@ -6,7 +6,7 @@ import multiprocessing as mp
 
 out_dir = os.environ.get('OUT_DIR')
 if out_dir is None:
-   out_dir = "../data" 
+   out_dir = "../data/output" 
 
 in_fol = str(out_dir)+'/heatmap_txt'
 thresholded_fol = str(out_dir)+'/heatmap_txt_3classes_separate_class/heatmap_txt_thresholded'

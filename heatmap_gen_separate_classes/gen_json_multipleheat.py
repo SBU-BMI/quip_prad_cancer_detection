@@ -73,7 +73,7 @@ subjectid = casename[:-2];
 
 out_dir = os.environ.get('OUT_DIR')
 if out_dir is None:
-   out_dir = "../data" 
+   out_dir = "../data/output" 
 
 json_out_rootfol = str(out_dir)+'/heatmap_jsons_3classes'
 json_out_fol = os.path.join(json_out_rootfol, pred_file_path.split('/')[-2].split('_')[-1])
