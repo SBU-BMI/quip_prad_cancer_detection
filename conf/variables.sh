@@ -21,8 +21,8 @@ export OUT_DIR=${DATA_DIR}/output
 export JSON_OUTPUT_FOLDER=${OUT_DIR}/heatmap_jsons
 export HEATMAP_TXT_OUTPUT_FOLDER=${OUT_DIR}/heatmap_txt
 export LOG_OUTPUT_FOLDER=${OUT_DIR}/log
-export SVS_INPUT_PATH=${OUT_DIR}/svs
-export PATCH_PATH=${OUT_DIR}/patches
+export SVS_INPUT_PATH=${DATA_DIR}/svs
+export PATCH_PATH=${DATA_DIR}/patches
 
 export LYM_NECRO_CNN_MODEL_PATH=${BASE_DIR}/models_cnn
 export MODEL="RESNET_34_prostate_beatrice_john___1117_1038_0.9533516227597434_87.t7"
