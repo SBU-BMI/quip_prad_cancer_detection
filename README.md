@@ -46,7 +46,7 @@ Build the docker image by:
 docker build -t cancer_prediction .  (Note the dot at the end). 
 
 ## Step 1:
-Create folder named "data" and subfoders below on the host machine:
+Create folder named "data" and subfolders below on the host machine:
 
 - data/svs: to contains *.svs files
 - data/patches: to contain output from patch extraction
