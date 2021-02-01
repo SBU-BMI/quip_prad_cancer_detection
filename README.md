@@ -45,7 +45,8 @@ Build the docker image by:
 
 `docker build -t cancer_prediction .`  (Note the dot at the end). 
 
-## Step 1:
+## Prediction
+### Step 1:
 Create folder named "data" and subfolders below on the host machine:
 
 - data/svs: to contains *.svs files
@@ -54,7 +55,7 @@ Create folder named "data" and subfolders below on the host machine:
 - data/heatmap_txt: to contain prediction output
 - data/heatmap_jsons: to contain prediction output as json files
 
-## Step 2:
+### Step 2:
 - Run the docker container as follows: 
 
 ```
@@ -67,4 +68,28 @@ The following example runs the cancer detection pipeline. It will process images
 
 ```
 nvidia-docker run --name cancer_prediction_pipeline -itd -v /home/user/data:/data -e CUDA_VISIBLE_DEVICES='0' cancer_prediction svs_2_heatmap.sh
+```
+
+## Training
+### Step 1:
+Create folder named "data" and subfolders below on the host machine:
+
+- data/input/training_data: to contain training data
+- data/input/validation_data: to contain validation data
+- data/output/checkpoint: to contain checkpoint models (the last file written will be the "best" trained model)
+- data/output/log: to contain log files
+
+### Step 2:
+- Run the docker container as follows:
+
+```
+nvidia-docker run --name cancer_prediction_pipeline --ipc=host -itd -v <path-to-data>:/data -e CUDA_VISIBLE_DEVICES='0' cancer_prediction train_model.sh
+```
+
+Note the `--ipc=host` so that Torch can write to the model file.
+
+> :warning: If you omit `--ipc=host` in the command, you will get an error like:
+
+```
+RuntimeError: unable to write to file </torch_XX_XXXXXXXXXX>
 ```

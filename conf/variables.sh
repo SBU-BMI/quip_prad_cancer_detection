@@ -28,7 +28,7 @@ export LYM_NECRO_CNN_MODEL_PATH=${BASE_DIR}/models_cnn
 export MODEL="RESNET_34_prostate_beatrice_john___1117_1038_0.9533516227597434_87.t7"
 
 # Training folders
-# The list of case_ids you want to download heaetmaps from
+# The list of case_ids you want to download heatmaps from
 export CASE_LIST=${DATA_DIR}/raw_marking_to_download_case_list/case_list.txt
 export PATCH_SAMPLING_LIST_PATH=${DATA_DIR}/patch_sample_list
 export RAW_MARKINGS_PATH=${DATA_DIR}/raw_marking_xy

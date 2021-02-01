@@ -1,6 +1,10 @@
 import argparse
 from torchvision import transforms
-import time, os, sys, glob, copy
+import time
+import os
+import sys
+import glob
+import copy
 from time import strftime
 from sklearn.metrics import mean_squared_error, accuracy_score, hamming_loss, roc_curve, auc, f1_score, confusion_matrix
 from torch.utils.data import DataLoader, Dataset
@@ -134,9 +138,10 @@ def train_model(model, args, criterion, train_loader, val_loader):
                     'lr': lr,
                     'saved_epoch': epoch,
                 }
-                if not os.path.isdir('checkpoint'):
-                    os.mkdir('checkpoint')
-                save_point = './checkpoint/'
+                checkpoint = '/data/output/checkpoint'
+                if not os.path.isdir(checkpoint):
+                    os.mkdir(checkpoint)
+                save_point = checkpoint
                 if not os.path.isdir(save_point):
                     os.mkdir(save_point)
 
@@ -245,6 +250,22 @@ def get_data_transforms(mean, std, APS, input_size=224):
     return data_transforms
 
 
+# Check if the path specified is a valid directory that contains files.
+def isEmpty(path):
+    flag = 0
+    if os.path.exists(path) and os.path.isdir(path):
+        # Checking if the directory is empty or not
+        if not os.listdir(path):
+            print(path + ": Empty directory")
+            flag = 1
+    else:
+        # if pgm continues, you will get division by zero.
+        print(path + ": The path is either a file or is not valid")
+        flag = 1
+
+    return flag
+
+
 def main():
     args = get_args()
     print(args)
@@ -257,11 +278,20 @@ def main():
 
     data_transforms = get_data_transforms(mean, std, args.APS)
 
-    train_seer_fol = '/data10/shared/hanle/extract_prad_seer_john/patches_prad_seer_4classes'
-    train_beatrice_fol = '/data10/shared/hanle/extract_prad_seer_john/beatrice_training_4classes'
-    val_fol = '/data10/shared/hanle/extract_prad_seer_john/beatrice_validation_4classes'
+    # train_seer_fol = '/data10/shared/hanle/extract_prad_seer_john/patches_prad_seer_4classes'
+    # train_beatrice_fol = '/data10/shared/hanle/extract_prad_seer_john/beatrice_training_4classes'
+    # val_fol = '/data10/shared/hanle/extract_prad_seer_john/beatrice_validation_4classes'
+    # img_trains = glob.glob(os.path.join(train_seer_fol, '*png')) + glob.glob(os.path.join(train_beatrice_fol, '*png'))
 
-    img_trains = glob.glob(os.path.join(train_seer_fol, '*png')) + glob.glob(os.path.join(train_beatrice_fol, '*png'))
+    train_seer_fol = '/data/input/training_data'
+    val_fol = '/data/input/validation_data'
+
+    if isEmpty(train_seer_fol):
+        exit(1)
+    if isEmpty(val_fol):
+        exit(1)
+
+    img_trains = glob.glob(os.path.join(train_seer_fol, '*png'))
     img_vals = glob.glob(os.path.join(val_fol, '*png'))
     print('len of train/val set: ', len(img_trains), len(img_vals))
 
