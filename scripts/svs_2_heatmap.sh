@@ -3,6 +3,12 @@
 cd ../
 source ./conf/variables.sh
 
+VAR="$1"
+if [ -n "${VAR}" ]; then
+    export MODEL="$1"
+fi
+echo "MODEL: $MODEL"
+
 out_folders="heatmap_jsons heatmap_txt json log"
 for i in ${out_folders}; do
 	if [ ! -d ${OUT_DIR}/$i ]; then

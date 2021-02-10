@@ -54,13 +54,15 @@ Create folder named "data" and subfolders below on the host machine:
 - data/log: to contain log files
 - data/heatmap_txt: to contain prediction output
 - data/heatmap_jsons: to contain prediction output as json files
+- models_cnn: contains prediction models
 
 ### Step 2:
 - Run the docker container as follows: 
 
 ```
-nvidia-docker run --name cancer_prediction_pipeline -itd -v <path-to-data>:/data -e CUDA_VISIBLE_DEVICES='<cuda device id>' cancer_prediction svs_2_heatmap.sh 
+nvidia-docker run --name cancer_prediction_pipeline -itd -v <path-to-data>:/data -e CUDA_VISIBLE_DEVICES='<cuda device id>' cancer_prediction svs_2_heatmap.sh <model-name>
 ```
+If you prefer to use the default model (in folder models_cnn), then simply run the above command without any model name.
 
 CUDA_VISIBLE_DEVICES -- set to select the GPU to use 
 
