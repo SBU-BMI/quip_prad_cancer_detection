@@ -88,10 +88,20 @@ Create folder named "data" and subfolders below on the host machine:
 nvidia-docker run --name prad-cancer-detection --ipc=host -itd -v <path-to-data>:/data -e CUDA_VISIBLE_DEVICES='0' prad_cancer_detection train_model.sh
 ```
 
+This will output prediction models to the `checkpoint` folder.  The one that was last written to the file system would be the one with the best F1 score.
+
 Note the `--ipc=host` so that Torch can write to the model file.
 
 > :warning: If you omit `--ipc=host` in the command, you will get an error like:
 
 ```
 RuntimeError: unable to write to file </torch_XX_XXXXXXXXXX>
+```
+
+## Prediction After Training
+Take the best model that was produced in the previous step, and put it into folder `models_cnn`.
+Then, pass the file name as a parameter to `svs_2_heatmap.sh`, like this:
+
+```
+nvidia-docker run --name prad-cancer-detection -itd -v <path-to-data>:/data -e CUDA_VISIBLE_DEVICES='0' prad_cancer_detection svs_2_heatmap.sh <resnet34-model-name>
 ```
