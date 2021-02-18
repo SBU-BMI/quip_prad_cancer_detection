@@ -60,11 +60,11 @@ Create folder named "data" and subfolders below on the host machine:
 - Run the docker container as follows: 
 
 ```
-nvidia-docker run --name prad-detection -itd -v <path-to-data>:/data -e CUDA_VISIBLE_DEVICES='<cuda device id>' prad_detection svs_2_heatmap.sh <model-name>
+nvidia-docker run --name prad-detection -itd -v <path-to-data>:/data -e CUDA_VISIBLE_DEVICES='<cuda device id>' prad_detection svs_2_heatmap.sh
 ```
-If you prefer to use the default model (in folder models_cnn), then simply run the above command without any model name.
+<!--  <model-name> If you prefer to use the default model (in folder models_cnn), then simply run the above command without any model name.-->
 
-CUDA_VISIBLE_DEVICES -- set to select the GPU to use 
+CUDA_VISIBLE_DEVICES -- set to select the GPU to use.
 
 The following example runs the cancer detection pipeline. It will process images in /home/user/data/svs and output the results to /home/user/data. 
 
@@ -92,11 +92,14 @@ This will output prediction models to the `checkpoint` folder.  The one that was
 
 Note the `--ipc=host` so that Torch can write to the model file.
 
-> :warning: If you omit `--ipc=host` in the command, you will get an error like:
+> :warning: If you omit `--ipc=host` in the command, you will get an error.
 
+<!--
+like:
 ```
 RuntimeError: unable to write to file </torch_XX_XXXXXXXXXX>
 ```
+-->
 
 ## Prediction After Training
 Take the best model that was produced in the previous step, and put it into folder `models_cnn`.
