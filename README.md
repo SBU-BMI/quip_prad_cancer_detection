@@ -64,7 +64,7 @@ nvidia-docker run --name prad-detection -itd -v <path-to-data>:/data -e CUDA_VIS
 ```
 <!--  <model-name> If you prefer to use the default model (in folder models_cnn), then simply run the above command without any model name.-->
 
-CUDA_VISIBLE_DEVICES -- set to select the GPU to use.
+CUDA_VISIBLE_DEVICES &mdash; set to select the GPU to use.
 
 The following example runs the cancer detection pipeline. It will process images in /home/user/data/svs and output the results to /home/user/data. 
 
