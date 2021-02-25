@@ -7,8 +7,8 @@ from scipy.spatial.distance import dice
 
 
 def apply_threshold(arr):
-    arr[arr < 0.5] = 0  # Do below first
-    arr[arr >= 0.5] = 1  # Then above
+    arr[arr < 0.5] = 0
+    arr[arr >= 0.5] = 1
     return arr
 
 
