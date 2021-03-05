@@ -103,7 +103,7 @@ if __name__ == '__main__':
 
     print("Similarity scores")
     if isSeparateClass:
-        ind = folder1.rindex('_')
+        ind = folder1.rindex('_') + 1
         str1 = folder1[ind:]
         print("Slide,{0}".format(str1))
     else:
