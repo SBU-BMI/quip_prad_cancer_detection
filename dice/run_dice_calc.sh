@@ -2,6 +2,10 @@
 # Example:
 # ./run_dice_calc.sh "/prad_old_model/heatmap_txt" "/prad_new_model/heatmap_txt" "/prad_old_model/heatmap_txt_3classes_separate_class" "/prad_new_model/heatmap_txt_3classes_separate_class"
 
+if [ $# -eq 0 ]; then
+    echo 'Usage: ./'$(basename "$0") '/path/to/old_heatmap_txt /path/to/new_heatmap_txt /path/to/old_heatmap_txt_3classes_separate_class /path/to/new_heatmap_txt_3classes_separate_class'
+fi
+
 current_time=$(date "+%Y.%m.%d-%H.%M.%S")
 dir_old="$1"
 dir_new="$2"
