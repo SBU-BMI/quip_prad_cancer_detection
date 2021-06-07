@@ -66,12 +66,17 @@ for x in range(1, width, pw):
             pw_y = height - y;
         else:
             pw_y = pw;
+<<<<<<< HEAD
 
+=======
+>>>>>>> develop
         if int(patch_size_20X * pw_x / pw) > 50 and int(patch_size_20X * pw_y / pw) > 50:
             corrs.append((x, y, pw_x, pw_y))
 
 def extract_patch(corr):
     x, y, pw_x, pw_y = corr
+    print(x, y, pw_x, pw_y, pw)
+    sys.stdout.flush()
     fname = '{}/{}_{}_{}_{}.png'.format(output_folder, x, y, pw, patch_size_20X);
 
     patch = oslide.read_region((x, y), 0, (pw_x, pw_y));
@@ -84,7 +89,7 @@ def extract_patch(corr):
     patch.save(fname);
 
 print(slide_name, len(corrs))
-pool = mp.Pool(processes=4)
+pool = mp.Pool(processes=16)
 pool.map(extract_patch, corrs)
 
 print('Elapsed time: ', (time.time() - start)/60.0)

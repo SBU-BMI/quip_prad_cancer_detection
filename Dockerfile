@@ -1,21 +1,27 @@
-FROM pytorch/pytorch:0.4.1-cuda9-cudnn7-devel 
+FROM pytorch/pytorch:1.0.1-cuda10.0-cudnn7-devel 
 MAINTAINER Tahsin Kurc
 
-RUN		apt-get -y update && \
-		apt-get install --yes python3-openslide wget zip libgl1-mesa-glx libgl1-mesa-dev && \
-		pip install --upgrade pip && \
-		conda install --yes scikit-learn && \
-		pip install Pillow pymongo && \
-		pip install torchvision==0.2.1 && \
-		pip install openslide-python && \
-		conda install --yes -c conda-forge opencv
+RUN	apt-get -y update 
+RUN 	apt-get install --yes python3-openslide wget zip libgl1-mesa-glx libgl1-mesa-dev 
+RUN 	pip install --upgrade pip 
+RUN 	conda update -n base -c defaults conda 
+RUN 	pip3 install setuptools==45 
+RUN 	pip install cython 
+RUN 	conda install --yes pytorch=0.4.1 cuda90 -c pytorch 
+RUN 	conda install --yes scikit-learn 
+RUN 	pip3 install "Pillow<7" pymongo pandas 
+RUN 	pip3 install torchvision==0.2.1 
+RUN 	conda install --yes -c conda-forge opencv
 
-COPY	. /root/quip_prad_cancer_detection/.
+RUN 	pip install openslide-python
 
-RUN		chmod 0755 /root/quip_prad_cancer_detection/scripts/*
-
-ENV	BASE_DIR="/root/quip_prad_cancer_detection"
+ENV	BASE_DIR="/quip_app/quip_prad_cancer_detection"
 ENV	PATH="./":$PATH
-WORKDIR	/root/quip_prad_cancer_detection/scripts
+
+COPY	. ${BASE_DIR}/. 
+
+RUN	chmod 0755 ${BASE_DIR}/scripts/*
+
+WORKDIR	${BASE_DIR}/scripts
 
 CMD ["/bin/bash"]
