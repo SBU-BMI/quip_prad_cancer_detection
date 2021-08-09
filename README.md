@@ -1,10 +1,6 @@
 # Prostate Adenocarcinoma (PRAD) detection pipeline
 
-<<<<<<< HEAD
-This software implements the pipeline for the 2-classes Prostate cancer detection project. 
-=======
 This software implements the pipeline for the 3-classes (benign, grade3, grade45) Prostate cancer detection project. 
->>>>>>> develop
 
 # Dependencies
 
@@ -32,19 +28,6 @@ This software implements the pipeline for the 3-classes (benign, grade3, grade45
 - prediction/: CNN prediction code. 
 
 - training_codes/: CNN training code. 
-<<<<<<< HEAD
-
-## Setup conf/variables.sh
-- Change the BASE_DIR to the path of your folder after you clone the git repo
-
-## Training
-- Go to folder "training_codes", run python train_prostate_cnn_Resnet_pretrained_SEER.py
-
-## WSIs prediction
-- Go to folder "scripts", run bash svs_2_heatmap.sh
-
-=======
->>>>>>> develop
 
 ## Setup conf/variables.sh
 - Change the BASE_DIR to the path of your folder after you clone the git repo
