@@ -6,7 +6,7 @@ From: pytorch/pytorch:1.0.1-cuda10.0-cudnn7-devel
 
 %post
 	apt-get -y update 
-	apt-get install --yes python3-openslide wget zip libgl1-mesa-glx libgl1-mesa-dev
+	apt-get install --yes python3-openslide wget zip libgl1-mesa-glx libgl1-mesa-dev git
 	export PATH="/opt/conda/bin:/usr/local/bin:./":$PATH
 	pip install --upgrade pip 
 	conda update -n base -c defaults conda 
@@ -24,6 +24,8 @@ From: pytorch/pytorch:1.0.1-cuda10.0-cudnn7-devel
 %environment
 	export BASE_DIR="/quip_app/quip_prad_cancer_detection"
 	export PATH="/opt/conda/bin:/usr/local/bin:./":$PATH
+	export MODEL_VER="v1.0"
+	export MODEL_URL="https://github.com/SBU-BMI/quip_prad_cancer_detection/blob/master/models_cnn/RESNET_34_prostate_beatrice_john___1117_1038_0.9533516227597434_87.t7"
 
 %runscript
 	cd ${BASE_DIR}/scripts

@@ -2,7 +2,7 @@ FROM pytorch/pytorch:1.0.1-cuda10.0-cudnn7-devel
 MAINTAINER Tahsin Kurc
 
 RUN	apt-get -y update 
-RUN 	apt-get install --yes python3-openslide wget zip libgl1-mesa-glx libgl1-mesa-dev 
+RUN 	apt-get install --yes python3-openslide wget zip libgl1-mesa-glx libgl1-mesa-dev git
 RUN 	pip install --upgrade pip 
 RUN 	conda update -n base -c defaults conda 
 RUN 	pip3 install setuptools==45 
@@ -17,6 +17,9 @@ RUN 	pip install openslide-python
 
 ENV	BASE_DIR="/quip_app/quip_prad_cancer_detection"
 ENV	PATH="./":$PATH
+
+ENV	MODEL_VER="v1.0"
+ENV	MODEL_URL="https://github.com/SBU-BMI/quip_prad_cancer_detection/blob/master/models_cnn/RESNET_34_prostate_beatrice_john___1117_1038_0.9533516227597434_87.t7"
 
 COPY	. ${BASE_DIR}/. 
 

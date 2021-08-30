@@ -27,6 +27,17 @@ export PATCH_PATH=${DATA_DIR}/patches
 export LYM_NECRO_CNN_MODEL_PATH=${BASE_DIR}/models_cnn
 export MODEL="RESNET_34_prostate_beatrice_john___1117_1038_0.9533516227597434_87.t7"
 
+# VERSION INFO
+export MODEL_PATH=$LYM_NECRO_CNN_MODEL_PATH/$MODEL 
+if [[ -z "${TUMOR_VERSION}" ]]; then
+	export TUMOR_VERSION=$(git show --oneline -s | cut -f 1 -d ' ')":"$MODEL_VER":"$(sha256sum $MODEL_PATH | cut -c1-7)
+	export HEATMAP_VERSION=$HEATMAP_VERSION":"$TUMOR_VERSION
+fi
+export GIT_REMOTE=$(git remote -v | head -n 1 | cut -f 1 -d ' '| cut -f 2)
+export GIT_BRANCH=$(git branch | grep "\*" | cut -f 2 -d ' ')
+export GIT_COMMIT=$(git show | head -n 1 | cut -f 2 -d ' ')
+export MODEL_HASH=$(sha256sum $MODEL_PATH | cut -f 1 -d ' ')
+
 # Training folders
 # The list of case_ids you want to download heatmaps from
 export CASE_LIST=${DATA_DIR}/raw_marking_to_download_case_list/case_list.txt

@@ -29,6 +29,7 @@ cmd_list = []
 for version, txt in zip(heatmap_versions, heatmap_txt_in):
     log_file = log_fol + 'log.heatmap_jsons_' + txt.split('/')[-1]
     cmd = 'bash ./gen_all_json.sh {} {} > {} 2>&1'.format(version, txt, log_file)
+    print("COMMAND: ",cmd)
     cmd_list.append(cmd)
 
 print(len(cmd_list))
