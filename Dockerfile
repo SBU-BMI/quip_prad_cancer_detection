@@ -2,8 +2,8 @@ FROM pytorch/pytorch:1.0.1-cuda10.0-cudnn7-devel
 MAINTAINER Tahsin Kurc
 
 RUN	apt-get -y update 
-RUN 	apt-get install --yes python3-openslide wget zip libgl1-mesa-glx libgl1-mesa-dev git
-RUN 	pip install --upgrade pip 
+RUN 	apt-get install --yes python3-openslide wget zip libgl1-mesa-glx libgl1-mesa-dev 
+RUN 	pip install pip==21.0.1 
 RUN 	conda update -n base -c defaults conda 
 RUN 	pip3 install setuptools==45 
 RUN 	pip install cython 
