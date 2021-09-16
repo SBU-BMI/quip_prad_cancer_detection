@@ -2,7 +2,7 @@ BootStrap: docker
 From: pytorch/pytorch:1.0.1-cuda10.0-cudnn7-devel 
 
 %files
-	../* /quip_app/quip_prad_cancer_detection/
+	../ /quip_app/quip_prad_cancer_detection/
 
 %post
 	apt-get -y update 
